@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Synthetix Labz">
+  <rect width="64" height="64" fill="#0a0a12"/>
+  <path d="M32 14 L48 23 V41 L32 50 L16 41 V23 Z" fill="none" stroke="#00f0ff" stroke-width="2"/>
+  <path d="M34 22 L26 33 H32 L29 42 L40 29 H34 Z" fill="#00f0ff"/>
+</svg>
