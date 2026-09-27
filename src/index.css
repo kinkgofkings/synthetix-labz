@@ -1,0 +1,195 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #0a0a12;
+  color: #dffbff;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+.hud-grid {
+  background-image:
+    linear-gradient(rgba(0, 240, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(ellipse at center, black 45%, transparent 82%);
+}
+
+.scanlines {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.18),
+    rgba(0, 0, 0, 0.18) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+}
+
+.scanlines::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 16%;
+  background: linear-gradient(to bottom, transparent, rgba(0, 240, 255, 0.08), transparent);
+  animation: sweep 7.5s linear infinite;
+}
+
+.vignette {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  box-shadow: inset 0 0 140px 30px rgba(0, 0, 0, 0.62);
+}
+
+.rise {
+  animation: rise 280ms ease-out;
+}
+
+@keyframes sweep {
+  0% {
+    transform: translateY(-120%);
+  }
+  100% {
+    transform: translateY(640%);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.nova-map .leaflet-container {
+  background: #071018;
+  font-family: inherit;
+}
+
+.nova-map::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 420;
+  background: radial-gradient(ellipse at center, transparent 42%, rgba(5, 10, 16, 0.42) 100%);
+}
+
+.nova-map .nova-sat {
+  filter: brightness(0.72) contrast(1.16) saturate(0.82) sepia(0.18) hue-rotate(52deg);
+}
+
+.nova-map .nova-roads {
+  opacity: 0.82;
+  filter: brightness(1.15) saturate(0.7);
+}
+
+.nova-map .leaflet-control-zoom {
+  border: none;
+  box-shadow: 0 0 16px rgba(0, 240, 255, 0.16);
+}
+
+.nova-map .leaflet-control-zoom a {
+  background: rgba(8, 12, 18, 0.9);
+  color: #7ef6ff;
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  width: 28px;
+  height: 28px;
+  line-height: 26px;
+}
+
+.nova-map .leaflet-control-zoom a:hover {
+  background: rgba(0, 240, 255, 0.16);
+  color: #00f0ff;
+}
+
+.nova-map .leaflet-control-attribution {
+  background: rgba(10, 10, 18, 0.82);
+  color: #7d97a0;
+  font-size: 10px;
+}
+
+.nova-map .leaflet-tooltip {
+  background: #0a0a12;
+  border: 1px solid rgba(0, 240, 255, 0.5);
+  color: #00f0ff;
+  border-radius: 0;
+  box-shadow: 0 0 16px rgba(0, 240, 255, 0.25);
+  font-family: inherit;
+  letter-spacing: 0.12em;
+  font-size: 10px;
+}
+
+.leaflet-div-icon.bullet-icon,
+.leaflet-div-icon.radius-tag {
+  background: transparent;
+  border: 0;
+}
+
+.bullet-icon {
+  position: relative;
+}
+
+.bullet-ring,
+.bullet-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 999px;
+  transform: translate(-50%, -50%);
+}
+
+.bullet-ring {
+  width: 26px;
+  height: 26px;
+  border: 1px solid rgba(0, 240, 255, 0.85);
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.45);
+}
+
+.bullet-core {
+  width: 10px;
+  height: 10px;
+  background: #e8fdff;
+  box-shadow: 0 0 10px #00f0ff, 0 0 18px #00f0ff;
+}
+
+.radius-tag span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 46px;
+  height: 16px;
+  padding: 0 5px;
+  border: 1px solid rgba(0, 240, 255, 0.55);
+  background: rgba(6, 12, 18, 0.82);
+  color: #9af7ff;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  line-height: 16px;
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scanlines::after,
+  .rise {
+    animation: none;
+  }
+}
