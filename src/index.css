@@ -15,6 +15,17 @@ body {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
 }
 
+.splash-veil {
+  background: linear-gradient(
+    to bottom,
+    rgba(10, 10, 18, 0.58) 0%,
+    rgba(10, 10, 18, 0.2) 34%,
+    rgba(10, 10, 18, 0.16) 52%,
+    rgba(10, 10, 18, 0.78) 100%
+  );
+  box-shadow: inset 0 0 70px 8px rgba(5, 8, 14, 0.28);
+}
+
 .hud-grid {
   background-image:
     linear-gradient(rgba(0, 240, 255, 0.05) 1px, transparent 1px),

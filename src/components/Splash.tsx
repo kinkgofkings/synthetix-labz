@@ -61,11 +61,16 @@ export function Splash({ onEnter }: { onEnter: () => void }) {
   }, []);
 
   useEffect(() => {
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Enter") onEnter();
     };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = previous;
+      window.removeEventListener("keydown", onKey);
+    };
   }, [onEnter]);
 
   return (
@@ -75,7 +80,7 @@ export function Splash({ onEnter }: { onEnter: () => void }) {
         alt=""
         className="pointer-events-none absolute inset-0 h-full w-full object-cover object-[center_35%]"
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-void/50 via-transparent to-void" />
+      <div className="splash-veil pointer-events-none absolute inset-0" />
       <canvas ref={ref} className="absolute inset-0 h-full w-full" aria-hidden="true" />
       <div className="relative z-10 flex h-full flex-col px-6">
         <div className="p-5">

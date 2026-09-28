@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Download, Radio } from "lucide-react";
+import { Download, FileText, Radio } from "lucide-react";
 import { useProfile } from "./context/ProfileContext";
 import { downloadCv } from "./lib/cv";
 import { Logo } from "./components/Logo";
@@ -98,6 +98,10 @@ export default function App() {
               <Radio className="h-3 w-3" aria-hidden="true" />
               {clock}
             </span>
+            <a href="/resume.html" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 border border-lab px-2 py-1 text-[10px] tracking-[0.16em] text-lab hover:bg-lab hover:text-void">
+              <FileText className="h-3.5 w-3.5" aria-hidden="true" />
+              VIEW CV
+            </a>
             <button type="button" onClick={() => downloadCv(profile)} className="inline-flex items-center gap-1 border border-lab px-2 py-1 text-[10px] tracking-[0.16em] text-lab hover:bg-lab hover:text-void">
               <Download className="h-3.5 w-3.5" aria-hidden="true" />
               DOWNLOAD CV

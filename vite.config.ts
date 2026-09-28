@@ -1,6 +1,27 @@
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
+import { cvDocument } from "./src/lib/cv";
+import { seedProfile } from "./src/data/profile";
+
+function resumePage(): Plugin {
+  const html = () => cvDocument(seedProfile);
+  return {
+    name: "resume-page",
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        const path = req.url?.split("?")[0];
+        if (path !== "/resume.html" && path !== "/resume") return next();
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "text/html; charset=utf-8");
+        res.end(html());
+      });
+    },
+    generateBundle() {
+      this.emitFile({ type: "asset", fileName: "resume.html", source: html() });
+    },
+  };
+}
 
 export default defineConfig({
   build: {
@@ -8,6 +29,7 @@ export default defineConfig({
     minify: "esbuild",
   },
   plugins: [
+    resumePage(),
     react(),
     VitePWA({
       registerType: "autoUpdate",
@@ -44,6 +66,7 @@ export default defineConfig({
       workbox: {
         globPatterns: ["**/*.{js,css,html,svg,ico,webmanifest,jpg,jpeg,png,webp,mp4,webm}"],
         navigateFallback: "index.html",
+        navigateFallbackDenylist: [/^\/resume(?:\.html)?$/],
       },
     }),
   ],
