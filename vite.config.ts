@@ -48,6 +48,12 @@ export default defineConfig({
         start_url: "/",
         scope: "/",
         lang: "en",
+        related_applications: [
+          {
+            platform: "webapp",
+            url: "https://synthetix-labz.cloud/manifest.webmanifest",
+          },
+        ],
         icons: [
           {
             src: "favicon.svg",

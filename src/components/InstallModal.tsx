@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Download, X } from "lucide-react";
 import { Logo } from "./Logo";
+
+const INSTALLED_KEY = "synthetix-pwa-installed";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -10,6 +12,18 @@ interface BeforeInstallPromptEvent extends Event {
 function isStandalone() {
   const nav = navigator as Navigator & { standalone?: boolean };
   return window.matchMedia("(display-mode: standalone)").matches || Boolean(nav.standalone);
+}
+
+function rememberInstalled() {
+  localStorage.setItem(INSTALLED_KEY, "1");
+}
+
+function rememberedInstalled() {
+  return localStorage.getItem(INSTALLED_KEY) === "1";
+}
+
+function isIosBrowser() {
+  return /iphone|ipad|ipod/i.test(navigator.userAgent);
 }
 
 function deviceHint() {
@@ -22,21 +36,48 @@ function deviceHint() {
 export function InstallModal({ active }: { active: boolean }) {
   const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(null);
   const [open, setOpen] = useState(false);
-  const [installed, setInstalled] = useState(false);
+  const [installed, setInstalled] = useState(() => isStandalone() || rememberedInstalled());
+  const prompted = useRef(false);
 
   useEffect(() => {
     if (isStandalone()) {
+      rememberInstalled();
       setInstalled(true);
       return;
     }
     const onPrompt = (event: Event) => {
       event.preventDefault();
+      prompted.current = true;
+      localStorage.removeItem(INSTALLED_KEY);
+      setInstalled(false);
       setDeferred(event as BeforeInstallPromptEvent);
     };
-    const onInstalled = () => setInstalled(true);
+    const onInstalled = () => {
+      rememberInstalled();
+      setInstalled(true);
+      setOpen(false);
+      setDeferred(null);
+    };
     window.addEventListener("beforeinstallprompt", onPrompt);
     window.addEventListener("appinstalled", onInstalled);
+
+    const nav = navigator as Navigator & {
+      getInstalledRelatedApps?: () => Promise<Array<{ platform?: string }>>;
+    };
+    let cancelled = false;
+    if (nav.getInstalledRelatedApps) {
+      void nav.getInstalledRelatedApps().then((apps) => {
+        if (cancelled || prompted.current) return;
+        if (apps.some((app) => app.platform === "webapp")) {
+          rememberInstalled();
+          setInstalled(true);
+          setOpen(false);
+        }
+      }).catch(() => undefined);
+    }
+
     return () => {
+      cancelled = true;
       window.removeEventListener("beforeinstallprompt", onPrompt);
       window.removeEventListener("appinstalled", onInstalled);
     };
@@ -45,9 +86,10 @@ export function InstallModal({ active }: { active: boolean }) {
   useEffect(() => {
     if (!active || installed) return;
     if (sessionStorage.getItem("synthetix-install-dismissed") === "1") return;
+    if (!deferred && !isIosBrowser()) return;
     const timer = window.setTimeout(() => setOpen(true), 700);
     return () => window.clearTimeout(timer);
-  }, [active, installed]);
+  }, [active, installed, deferred]);
 
   if (!active || installed || !open) return null;
 
@@ -56,7 +98,11 @@ export function InstallModal({ active }: { active: boolean }) {
     await deferred.prompt();
     const choice = await deferred.userChoice;
     setDeferred(null);
-    if (choice.outcome === "accepted") setOpen(false);
+    if (choice.outcome === "accepted") {
+      rememberInstalled();
+      setInstalled(true);
+      setOpen(false);
+    }
   }
 
   function dismiss() {
