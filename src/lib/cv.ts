@@ -42,7 +42,10 @@ export function cvDocument(profile: Profile) {
     body { font-family: Georgia, serif; color: #12141a; background: #f4f1ea; margin: 0; line-height: 1.5; }
     .bar { position: sticky; top: 0; z-index: 2; display: flex; justify-content: center; padding: 14px 24px; background: #12141a; color: #f4f1ea; font-family: "Segoe UI", sans-serif; }
     .bar-inner { width: 100%; max-width: 760px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
-    .bar p { margin: 0; font-size: 13px; letter-spacing: 0.08em; }
+    .crumb { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 13px; letter-spacing: 0.08em; }
+    .crumb a { color: #f4f1ea; text-decoration: none; }
+    .crumb a:hover { text-decoration: underline; }
+    .crumb span[aria-current] { color: #c8c2b4; }
     .bar div { display: flex; gap: 8px; }
     .bar button { border: 1px solid #f4f1ea; background: transparent; color: #f4f1ea; font: inherit; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; padding: 8px 14px; cursor: pointer; }
     .bar button.primary { background: #f4f1ea; color: #12141a; }
@@ -63,7 +66,11 @@ export function cvDocument(profile: Profile) {
 <body>
 <div class="bar">
   <div class="bar-inner">
-    <p>Resume · view in the browser</p>
+    <nav class="crumb" aria-label="Breadcrumb">
+      <a href="/">Synthetix Labz</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">Resume</span>
+    </nav>
     <div>
       <button class="primary" type="button" onclick="window.print()">Save as PDF</button>
       <button type="button" onclick="window.print()">Print</button>
