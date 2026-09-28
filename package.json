@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "deploy": "npm run build && rsync -avz --delete -e \"ssh -i ~/.ssh/tex.pem\" dist/ ubuntu@184.192.203.177:/var/www/synthetix-labz/"
+    "deploy": "npm run build && rsync -avz --delete -e \"ssh -i ~/.ssh/tex.pem\" dist/ ubuntu@184.192.203.177:/var/www/synthetix-labz/dist/"
   },
   "dependencies": {
     "leaflet": "^1.9.4",
